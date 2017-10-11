@@ -66,10 +66,8 @@ public let VVVAPIClientStatusFailedNotification = "VVVAPIClientStatusFailedNotif
 
         let sessionConfig = URLSessionConfiguration.default
         
-        if let token = Config.shared.authToken {
-            sessionConfig.httpAdditionalHeaders = ["Authorization":token]
-        } else {
-            print("*** VVV authtoken not set, please call VVVAPI.setupWith to set authtoken ***")
+        if Config.shared.authToken == nil {
+            print("*** VVV authtoken not set, please call APIClient.setupWith to set authtoken ***")
         }
         
         urlSession = URLSession(configuration: sessionConfig)

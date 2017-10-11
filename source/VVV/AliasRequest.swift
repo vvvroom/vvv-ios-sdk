@@ -34,6 +34,10 @@ class AliasRequest: APIRequest {
         return .get
     }
     
+    override func encoding() -> APIParameter {
+        return .url
+    }
+    
     override func responseHandler() -> NetworkReponseHandler {
         return {(response,error) -> Void in
             

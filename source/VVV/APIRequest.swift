@@ -91,6 +91,17 @@ class APIRequest {
     func appendToUrl() -> String {
         return ""
     }
-
     
+    /**
+     
+     When overriden must call super to include the app Auth Token.
+     
+     - Return :
+     - [String:String] Header String Dictionary (defaults with the API authtoken)
+     
+     */
+    func headers() -> [String:String] {
+        guard let token = Config.shared.authToken else { return [:] }
+        return ["Authorization":token]
+    }
 }

@@ -57,21 +57,20 @@ extension APIRequestPerformer {
             return
         }
         
-        guard let stringUrl = buildUrlFrom(request: apiRequest),
-            let url = URL(string:stringUrl) else { return }
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = apiRequest.method().rawValue
-        let encodedResult = apiRequest.encoding().encode(URLRequest: request, parameters: apiRequest.params())
-        request = encodedResult.0
+        guard let request = APIParameter.encode(networkRequest: apiRequest) else {
+            apiRequest.responseHandler()(nil, "Something went wrong, Error encoding parameters")
+            return
+        }
 
-        //print("request \(encodedResult)")
-        
         let task = urlSession.dataTask(with: request) { (data, response, error) in
             
             //Dispatch to main thread for UI updates
             DispatchQueue.main.async {
+                
+                self.log(request: request, data: data)
+                
                 guard let json = Utils.convertDataToJson(data: data) else {
+                    
                     if let error = error {
                         apiRequest.responseHandler()(nil, error.localizedDescription)
                         return
@@ -86,23 +85,19 @@ extension APIRequestPerformer {
         task.resume()
     }
     
-    /**
-     
-     This builds the url to perform from the API request.  It appends any required strings and the percent encodes the url for safety from illegal characters. Note this happens BEFORE any urlencoded "GET" parameters are appended to the url.
-     
-     - Parameters:
-        - request: The apiRequest to get the url information from
-     
-     - Return:
-        - String: The percent encoded url.
-     
-     */
-    func buildUrlFrom(request:APIRequest) -> String? {
-        let url = "\(request.endPoint().fullUrl())\(request.appendToUrl())"
+    func log(request:URLRequest,data:Data?) {
         
-        if let safeUrl = url.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) {
-            return safeUrl
+        print("request url \(request.url!)")
+        if let body = request.httpBody {
+            print("request body \(String(data: body, encoding: .utf8)!)")
         }
-        return nil
+        
+        if let headers = request.allHTTPHeaderFields {
+            print("request headers \(headers)")
+        }
+        
+        guard let data = data,
+            let dataString = String(data: data, encoding: .utf8) else { return }
+        print("response \(dataString)")
     }
 }
