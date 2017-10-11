@@ -78,7 +78,7 @@ extension LocationServices {
      Called when recieved the app became active notification, and checks status and starts location updates.  If authorisation is denied will clear any saved current location.
 
      */
-    func appBecameActive() {
+    @objc func appBecameActive() {
         
         let status = CLLocationManager.authorizationStatus()
         
@@ -119,7 +119,7 @@ extension LocationServices {
      Stop location updates, triggered when app enters background notification if called.
      
      */
-    func stopLocationUpdates() {
+    @objc func stopLocationUpdates() {
         coreManager.stopMonitoringSignificantLocationChanges()
     }
     

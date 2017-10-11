@@ -60,7 +60,8 @@ class Utils {
         
         //Now we get the first 2 letters and the letters characterset
         let lettersIndex = flightNumber.index(flightNumber.startIndex, offsetBy: 2)
-        let firstTwo = flightNumber.substring(to: lettersIndex)
+        //let firstTwo = flightNumber.substring(to: lettersIndex)
+        let firstTwo = String(flightNumber[...lettersIndex])
         
         //Now we check that the first 2 characters are letters.
         if !firstTwo.containsOnlyLetters() {
@@ -71,7 +72,7 @@ class Utils {
         let start = flightNumber.index(flightNumber.startIndex, offsetBy: 2)
         let end = flightNumber.index(start, offsetBy: 3)
         let range = Range(uncheckedBounds: (lower: start, upper: end))
-        let numbersString = flightNumber.substring(with: range)
+        let numbersString = String(flightNumber[range])
         
         //Now we check that the these characters are numbers.
         if !numbersString.containsOnlyNumbers() {
