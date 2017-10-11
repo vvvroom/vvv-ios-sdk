@@ -104,4 +104,29 @@ class APIRequest {
         guard let token = Config.shared.authToken else { return [:] }
         return ["Authorization":token]
     }
+    
+    func map<T:Decodable>(data:Data?,toClass:T.Type) -> T? {
+        
+        guard let data = data else { return nil }
+        
+        let typeName = String(describing:T.self)
+        let decoder = JSONDecoder()
+        
+        do {
+            let mappedResponse = try decoder.decode(T.self, from: data)
+            return mappedResponse
+        } catch DecodingError.keyNotFound(let key, let context) {
+            print("Error mapping \(typeName) \(key) \(context.debugDescription)")
+        } catch DecodingError.typeMismatch(let type, let context) {
+            print("Error mapping \(typeName) \(type) \(context.debugDescription)")
+        } catch DecodingError.valueNotFound(let type, let context) {
+            print("Error mapping \(typeName) \(type) \(context.debugDescription)")
+        } catch DecodingError.dataCorrupted(let context) {
+            print("Error mapping \(typeName) \(context.debugDescription)")
+        } catch {
+            print("Error mapping \(typeName) \(error.localizedDescription)")
+        }
+        return nil
+    }
+    
 }

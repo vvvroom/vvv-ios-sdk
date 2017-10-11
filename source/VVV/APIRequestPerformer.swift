@@ -67,27 +67,26 @@ extension APIRequestPerformer {
             //Dispatch to main thread for UI updates
             DispatchQueue.main.async {
                 
-                self.log(request: request, data: data)
+                //self.log(request: request, data: data)
                 
-//                if let error = error {
-//                    apiRequest.responseHandler()(nil, error.localizedDescription)
-//                    return
-//                }
-//                
-//                apiRequest.responseHandler()(data,nil)
-                
-                
-                guard let json = Utils.convertDataToJson(data: data) else {
-                    
-                    if let error = error {
-                        apiRequest.responseHandler()(nil, error.localizedDescription)
-                        return
-                    }
-                    apiRequest.responseHandler()(nil, "Request failed with no error")
+                if let error = error {
+                    apiRequest.responseHandler()(nil, error.localizedDescription)
                     return
                 }
                 
-                apiRequest.responseHandler()(json,nil)
+                apiRequest.responseHandler()(data,nil)
+                
+//                guard let json = Utils.convertDataToJson(data: data) else {
+//
+//                    if let error = error {
+//                        apiRequest.responseHandler()(nil, error.localizedDescription)
+//                        return
+//                    }
+//                    apiRequest.responseHandler()(nil, "Request failed with no error")
+//                    return
+//                }
+//
+//                apiRequest.responseHandler()(json,nil)
             }
         }
         task.resume()

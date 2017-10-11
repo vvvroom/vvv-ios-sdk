@@ -41,30 +41,40 @@ class AliasRequest: APIRequest {
     override func responseHandler() -> NetworkResponseHandler {
         return {(response,error) -> Void in
             
-            if let alias = self.map(json: response) {
+            let mappedResponse = super.map(data: response as? Data, toClass: AliasResponse.self)
+        
+            if let alias = mappedResponse?.alias {
                 self.completion(alias,nil)
                 return
             }
             
-            if let error = self.error(json: response) {
+            if let error = mappedResponse?.message {
                 self.completion(nil,error)
                 return
             }
             self.completion(nil,"An unknown error occured")
         }
     }
+}
+
+class AliasResponse : Decodable {
     
-    func map(json:Any?) -> String? {
-        guard let jsonDict = json as? [String:Any],
-            let client = jsonDict["client"] as? [String:Any],
-            let alias = client["alias"] as? String else { return nil }
-        
-        return alias
+    let alias : String?
+    let message : String?
+    
+    required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        self.message = try values.decodeIfPresent(String.self, forKey: .message)
+        let container = try? values.nestedContainer(keyedBy: ClientCodingKeys.self, forKey: .client)
+        self.alias = try container?.decodeIfPresent(String.self, forKey: .alias)
     }
     
-    func error(json:Any?) -> String? {
-        guard let jsonDict = json as? [String:Any],
-            let message = jsonDict["message"] as? String else { return nil }
-        return message
+    enum CodingKeys : String,CodingKey {
+        case client
+        case message
+    }
+    
+    enum ClientCodingKeys : String,CodingKey {
+        case alias
     }
 }

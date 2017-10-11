@@ -25,7 +25,7 @@ enum NetworkEndpoint : String {
     case SupplierList = "v1.2/supplier/list"
     case BookingTerms = "v1.2/booking/terms"
     case TopLocations = "v1.2/search/toplocations"
-    case Details = "v1.2"
+    case Details = "v2.0"
 
     /**
      
