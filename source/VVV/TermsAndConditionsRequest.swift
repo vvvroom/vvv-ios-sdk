@@ -84,7 +84,7 @@ class TermsAndConditionsRequest: APIRequest {
         return paramsDict
     }
     
-    override func responseHandler() -> NetworkReponseHandler {
+    override func responseHandler() -> NetworkResponseHandler {
         return { (response,error) -> Void in
  
             guard let json = response else {

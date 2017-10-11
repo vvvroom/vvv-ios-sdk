@@ -44,7 +44,7 @@ class FetchBookingRequest: APIRequest {
         return ["supplierConfirmation":self.confirmation,"lastName":self.lastName]
     }
     
-    override func responseHandler() -> NetworkReponseHandler {
+    override func responseHandler() -> NetworkResponseHandler {
         return { (response,error) -> Void in
             
             if let booking = self.map(json: response) {

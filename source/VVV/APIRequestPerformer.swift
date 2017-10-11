@@ -69,6 +69,14 @@ extension APIRequestPerformer {
                 
                 self.log(request: request, data: data)
                 
+//                if let error = error {
+//                    apiRequest.responseHandler()(nil, error.localizedDescription)
+//                    return
+//                }
+//                
+//                apiRequest.responseHandler()(data,nil)
+                
+                
                 guard let json = Utils.convertDataToJson(data: data) else {
                     
                     if let error = error {

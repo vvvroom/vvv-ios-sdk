@@ -9,7 +9,7 @@
 import Foundation
 
 /** A standard network response block that is used by the APIRequest performer to provide the response */
-typealias NetworkReponseHandler = (Any?,String?) -> ()
+typealias NetworkResponseHandler = (Any?,String?) -> ()
 
 /** The base class for API requests, this class must be subclassed to be used, and is passed into the api request performer. */
 class APIRequest {
@@ -76,7 +76,7 @@ class APIRequest {
         - NetworkReponseHandler: the completion block.
      
      */
-    func responseHandler() -> NetworkReponseHandler {
+    func responseHandler() -> NetworkResponseHandler {
         return {(response,error) -> Void in }
     }
     

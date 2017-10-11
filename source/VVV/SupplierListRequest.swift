@@ -33,7 +33,7 @@ class SupplierListRequest: APIRequest {
         return .get
     }
     
-    override func responseHandler() -> NetworkReponseHandler {
+    override func responseHandler() -> NetworkResponseHandler {
         return {(response,error) -> Void in
             
             if let suppliers = self.map(json: response) {

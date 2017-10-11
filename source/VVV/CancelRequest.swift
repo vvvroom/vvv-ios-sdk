@@ -53,7 +53,7 @@ class CancelRequest: APIRequest {
         return paramsDict
     }
     
-    override func responseHandler() -> NetworkReponseHandler {
+    override func responseHandler() -> NetworkResponseHandler {
         return {(response,error) -> Void in
             
             if self.map(json: response) {

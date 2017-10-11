@@ -38,7 +38,7 @@ class AliasRequest: APIRequest {
         return .url
     }
     
-    override func responseHandler() -> NetworkReponseHandler {
+    override func responseHandler() -> NetworkResponseHandler {
         return {(response,error) -> Void in
             
             if let alias = self.map(json: response) {

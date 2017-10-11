@@ -71,7 +71,7 @@ class DepotRequest : APIRequest {
         return .url
     }
     
-    override func responseHandler() -> NetworkReponseHandler {
+    override func responseHandler() -> NetworkResponseHandler {
         return {(response,error) -> Void in
             
             guard let json = response else {
