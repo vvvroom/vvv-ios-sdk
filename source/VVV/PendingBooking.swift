@@ -217,11 +217,10 @@ import Foundation
      */
     init?(json:[String:Any]) {
         
-        guard let amountString = json["amount"] as? String,
-            let amount = Decimal(string: amountString),
+        guard let amount = json["amount"] as? Double,
             let details = json["description"] as? String else { return nil }
         
-        self.amount = amount
+        self.amount = Decimal(floatLiteral: amount)
         self.details = details
         super.init()
     }
@@ -263,8 +262,7 @@ import Foundation
     init?(json: [String:Any]) {
         guard let identifier = json["id"] as? Int,
             let name = json["name"] as? String,
-            let priceString = json["price"] as? String,
-            let price = Decimal(string: priceString),
+            let price = json["price"] as? Double,
             let maxQuantity = json["maxQuantity"] as? Int else {
                 print("skipping extra")
                 return nil
@@ -273,7 +271,7 @@ import Foundation
         self.identifier = identifier
         self.extraName = name
         self.extraDescription = json["description"] as? String ?? ""
-        self.price = price
+        self.price = Decimal(floatLiteral: price)
         if let maxPriceString = json["maxPrice"] as? String {
             self.maxPrice = Decimal(string: maxPriceString)
         }
