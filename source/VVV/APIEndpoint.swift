@@ -14,18 +14,18 @@ import Foundation
  */
 enum NetworkEndpoint : String {
     
-    case NearestDepot = "v1.2/search/nearest-depot-pair"
-    case SearchVehicles = "v1.2/search/vehicles"
+    case NearestDepot = "v2.0/search/nearest-depot-pair"
+    case SearchVehicles = "v2.0/search/vehicles"
     case SearchVehicle = "v1.2/search/vehicle"
     case CreateBooking = "v1.2/booking/create"
     case CancelBooking = "v1.2/booking/cancel"
     case AllBookings = "v1.2/booking/all"
     case GetBooking = "v1.2/booking"
     case SupplierTerms = "v1.2/supplier/terms"
-    case SupplierList = "v1.2/supplier/list"
+    case SupplierList = "v2.0/supplier/list"
     case BookingTerms = "v1.2/booking/terms"
-    case TopLocations = "v1.2/search/toplocations"
-    case Details = "v1.2"
+    case TopLocations = "v2.0/search/toplocations"
+    case Details = "v2.0"
 
     /**
      

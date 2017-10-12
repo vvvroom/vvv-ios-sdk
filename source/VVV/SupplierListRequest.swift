@@ -33,6 +33,10 @@ class SupplierListRequest: APIRequest {
         return .get
     }
     
+    override func encoding() -> APIParameter {
+        return .url
+    }
+    
     override func responseHandler() -> NetworkResponseHandler {
         return {(response,error) -> Void in
             

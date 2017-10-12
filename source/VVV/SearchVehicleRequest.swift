@@ -49,31 +49,21 @@ class SearchVehicleRequest : APIRequest {
         
         var paramsDict = [String:Any]()
         
-        paramsDict["supplier"] = depots.supplier.code
+        paramsDict["debug"] = "true"
+        paramsDict["supplierCode"] = depots.supplier.code
         paramsDict["pickUpDate"] = search.dateRange.start.apiFormattedDateString()
         paramsDict["pickUpTime"] = search.dateRange.start.apiFormattedTimeString()
         paramsDict["returnDate"] = search.dateRange.end.apiFormattedDateString()
         paramsDict["returnTime"] = search.dateRange.end.apiFormattedTimeString()
-        paramsDict["countryCode"] = search.residency.code
+        paramsDict["driverCountryCode"] = search.residency.code
         paramsDict["driverAge"] = search.age.rawValue
         
-        var pickupDepots = [String:[String:Any]]()
-        pickupDepots["0"] = depots.pickupDepot.toParams()
+        paramsDict["pickUpDepot[depotCode]"] = depots.pickupDepot.code
+        paramsDict["pickUpDepot[countryCode]"] = depots.pickupDepot.location.country
+        paramsDict["returnDepot[depotCode]"] = depots.returnDepot.code
+        paramsDict["returnDepot[countryCode]"] = depots.returnDepot.location.country
+        paramsDict["alias"] = Config.shared.alias ?? ""
         
-        var returnDepots = [String:[String:Any]]()
-        returnDepots["0"] = depots.returnDepot.toParams()
-        
-        paramsDict["pickUpDepot"] = pickupDepots
-        paramsDict["returnDepot"] = returnDepots
-        
-        var searchLocationDict = [String:Any]()
-        searchLocationDict["alias"] = Config.shared.alias ?? ""
-        searchLocationDict["pickupLocationCoordinates"] = search.pickupLocation?.locationDetails.commaSeperatedText()
-        searchLocationDict["returnLocationCoordinates"] = search.returnLocation?.locationDetails.commaSeperatedText()
-        searchLocationDict["pickUpLocationType"] = depots.pickupDepot.location.searchtype()
-        searchLocationDict["returnLocationType"] = depots.returnDepot.location.searchtype()
-        paramsDict["searchLocation"] = searchLocationDict
-
         return paramsDict
     }
     

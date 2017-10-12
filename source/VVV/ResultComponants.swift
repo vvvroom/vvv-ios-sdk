@@ -8,6 +8,38 @@
 
 import Foundation
 
+/** An object containing the mileage of a search result or booking */
+@objc(VVVMileage) public class Mileage : NSObject {
+    
+    /** The display name for mileage eg. "Unlimited Km" */
+    public let displayName : String
+    
+    /** Whether or not mileage is unlimited */
+    public let isUnlimited : Bool
+    
+    /**
+     
+     Init with the searchvehicle/s mileage object
+     - Parameters:
+     - json:  mileage json object
+     
+     */
+    init?(json:[String:Any]) {
+        guard let distanceUnit = json["distanceUnit"] as? String,
+            let duration = json["duration"] as? String else { return nil }
+        
+        self.isUnlimited = json["isUnlimited"] as? Bool ?? false
+        if isUnlimited {
+            self.displayName = "Unlimited \(distanceUnit)"
+        } else {
+            self.displayName = "\(duration) \(distanceUnit)"
+        }
+        
+        super.init()
+    }
+    
+}
+
 /** An object containing the cost of a search result or booking */
 @objc(VVVCost) public class Cost : NSObject {
     

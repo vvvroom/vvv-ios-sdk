@@ -10,7 +10,7 @@ import Foundation
 import CoreLocation
 
 /** Simple object representing a location of a depot/search */
-@objc(VVVLocation) public class Location : NSObject, LocationSearchResult {
+@objc(VVVLocation) @objcMembers public class Location : NSObject, LocationSearchResult {
     
     /** Whether or not the location is an Airport */
     public var isAirport = false
@@ -58,7 +58,6 @@ import CoreLocation
         self.title = title
         self.subtitle = subTitle
         self.country = country
-        
     }
     
     /** Init a location at a placemark from Apple MKLocation search */
@@ -111,7 +110,7 @@ import CoreLocation
         self.subtitle = locationText
         self.isAirport = json.typeValueFor(key:"isAirport",type:Bool.self)
         self.title = shortName
-        self.airportCode = json["code"] as? String
+        self.airportCode = json["code"] as? String ?? ""
         self.country = country
     }
     
@@ -131,7 +130,7 @@ import CoreLocation
         self.subtitle = locationText
         self.isAirport = searchJSON.typeValueFor(key:"isAirport",type:Bool.self)
         self.title = shortName
-        self.airportCode = searchJSON["code"] as? String
+        self.airportCode = searchJSON["code"] as? String ?? ""
         self.country = country
     }
     

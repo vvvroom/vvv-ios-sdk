@@ -55,6 +55,10 @@ class TopLocationsRequest: APIRequest {
         return .get
     }
     
+    override func encoding() -> APIParameter {
+        return .url
+    }
+    
     override func appendToUrl() -> String {
         guard let search = self.searchString else { return "" }
         if !search.isEmpty {

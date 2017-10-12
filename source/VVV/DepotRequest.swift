@@ -55,15 +55,8 @@ class DepotRequest : APIRequest {
             returnType = 1
         }
         
-        let paramsDict : [String:Any] =
-            ["alias":Config.shared.alias ?? "",
-             "pickupCoordinate":pickupLocation.locationDetails.commaSeperatedText(),
-             "returnCoordinate":returnLocation.locationDetails.commaSeperatedText(),
-             "pickUpLocationType":pickupType,
-             "returnLocationType":returnType,
-             "byPassDefaultRadius":"0",
-             "showByPassedDepots":"0"]
-        
+        let paramsDict : [String:Any] = ["pickUpCoordinate":pickupLocation.locationDetails.commaSeperatedText(),"returnCoordinate":returnLocation.locationDetails.commaSeperatedText(),
+                                         "pickUpLocationType":"\(pickupType)","returnLocationType":"\(returnType)"]
         return paramsDict
     }
     
