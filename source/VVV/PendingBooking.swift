@@ -134,9 +134,11 @@ import Foundation
      */
     init?(json: [String : Any], depots: DepotPair,search:Search) {
         
-        guard let sippID = json["sippID"] as? Int,
-            let categoryID = json["vehicleCategoryID"] as? Int,
-            let classID = json["vehicleClassID"] as? Int else {
+        guard let sippID = json["sippId"] as? Int,
+            let categoryDict = json["vehicleCategory"] as? [String:Any],
+            let categoryID = categoryDict["id"] as? Int,
+            let classDict = json["vehicleClass"] as? [String:Any],
+            let classID = classDict["id"] as? Int else {
                 print("failed to map pending \(json.debugDescription)")
                 return nil
         }
@@ -239,14 +241,14 @@ import Foundation
     /** The maximam amount of this extra that can be added to a booking. eg for Baby seats it is 2 */
     public let maxQuantity : Int
     
+    /** The text description of the extra */
+    public let extraDescription : String
+    
     /** The maximam amount of this extra that can be added to a booking. eg for Baby seats it is 2 */
     public internal(set) var quatityRequested = 0
     
     /** The maximam price of this extra if available */
     var maxPrice : Decimal?
-    
-    /** The code identifier for the extra */
-    let code : Int
     
     /** The identifier for the extra */
     let identifier : Int
@@ -259,8 +261,7 @@ import Foundation
      
      */
     init?(json: [String:Any]) {
-        guard let code = json["equipmentCode"] as? Int,
-            let identifier = json["extrasTypeID"] as? Int,
+        guard let identifier = json["id"] as? Int,
             let name = json["name"] as? String,
             let priceString = json["price"] as? String,
             let price = Decimal(string: priceString),
@@ -269,9 +270,9 @@ import Foundation
                 return nil
         }
         
-        self.code = code
         self.identifier = identifier
         self.extraName = name
+        self.extraDescription = json["description"] as? String ?? ""
         self.price = price
         if let maxPriceString = json["maxPrice"] as? String {
             self.maxPrice = Decimal(string: maxPriceString)

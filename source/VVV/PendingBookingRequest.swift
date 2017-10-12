@@ -53,22 +53,19 @@ class PendingBookingRequest : APIRequest {
         
         var paramsDict = [String:Any]()
         
-        paramsDict["alias"] = Config.shared.alias ?? ""
-        paramsDict["supplier"] = result.supplier.code
+        paramsDict["supplierCode"] = result.supplier.code
         paramsDict["pickUpDate"] = search.dateRange.start.apiFormattedDateString()
         paramsDict["pickUpTime"] = search.dateRange.start.apiFormattedTimeString()
         paramsDict["returnDate"] = search.dateRange.end.apiFormattedDateString()
         paramsDict["returnTime"] = search.dateRange.end.apiFormattedTimeString()
-        paramsDict["countryCode"] = search.residency.code
+        paramsDict["driverCountryCode"] = search.residency.code
         paramsDict["driverAge"] = search.age.rawValue
         
         paramsDict["pickUpDepotCode"] = depots.pickupDepot.code
         
         paramsDict["returnDepotCode"] = depots.returnDepot.code
         paramsDict["carCategoryCode"] = result.code
-
-        paramsDict["rateID"] = result.rateId
-
+        
         return paramsDict
     }
     
@@ -105,7 +102,8 @@ class PendingBookingRequest : APIRequest {
     func map(json:Any) -> PendingBooking? {
         guard let jsonDict = json as? [String:Any],
             let data = jsonDict["data"] as? [String:Any],
-            let pending = PendingBooking(json: data, depots: self.depots, search: self.search) else { return nil }
+            let carObject = data.first?.value as? [String:Any],
+            let pending = PendingBooking(json: carObject, depots: self.depots, search: self.search) else { return nil }
         
         return pending
     }

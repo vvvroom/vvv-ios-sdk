@@ -16,7 +16,7 @@ enum NetworkEndpoint : String {
     
     case NearestDepot = "v2.0/search/nearest-depot-pair"
     case SearchVehicles = "v2.0/search/vehicles"
-    case SearchVehicle = "v1.2/search/vehicle"
+    case SearchVehicle = "v2.0/search/vehicle"
     case CreateBooking = "v1.2/booking/create"
     case CancelBooking = "v1.2/booking/cancel"
     case AllBookings = "v1.2/booking/all"

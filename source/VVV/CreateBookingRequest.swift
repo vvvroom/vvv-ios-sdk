@@ -111,11 +111,11 @@ class CreateBookingRequest: APIRequest {
         
         //Sub Objects
         paramsDict["vehicleDetails"] = createVehicleDetails()
-        if let extraParams = createExtraParams() {
-            paramsDict["equipmentList"] = extraParams
-        } else {
+//        if let extraParams = createExtraParams() {
+//            paramsDict["equipmentList"] = extraParams
+//        } else {
             paramsDict["equipmentList"] = "null"
-        }
+        //}
         
         if let fees = createFeesParams() {
             paramsDict["fees"] = fees
@@ -176,35 +176,33 @@ class CreateBookingRequest: APIRequest {
         - [String:Any]: Params dictionary to be added to the params main dictionary under "extras" key. Can be nil.
      
      */
-    func createExtraParams() -> [String:Any]? {
-        
-        var extras = [String:Any]()
-        
-        for extra in pending.extras {
-            
-            var extraParams = [String:Any]()
-            extraParams["extrasID"] = extra.identifier
-            extraParams["equipmentCode"] = extra.code
-            if let max = extra.maxPrice {
-                extraParams["maxPrice"] = max.currencyNumberOnlyString()
-            }
-            extraParams["name"] = extra.extraName
-            extraParams["price"] = extra.price.currencyNumberOnlyString()
-            
-            //I don't understand this format yet
-            var maxQuantityObject = [String:Any]()
-            for i in 0..<extra.maxQuantity {
-                maxQuantityObject["\(i)"] = "null"
-            }
-            
-            extraParams["maxQuantity"] = maxQuantityObject
-            extraParams["quantity"] = extra.quatityRequested
-            
-            extras["\(extra.code)"] = extraParams
-        }
-        
-        return extras
-    }
+//    func createExtraParams() -> [String:Any]? {
+//
+//        var extras = [String:Any]()
+//
+//        for extra in pending.extras {
+//
+//            var extraParams = [String:Any]()
+//            extraParams["extrasID"] = extra.identifier
+//            if let max = extra.maxPrice {
+//                extraParams["maxPrice"] = max.currencyNumberOnlyString()
+//            }
+//            extraParams["name"] = extra.extraName
+//            extraParams["price"] = extra.price.currencyNumberOnlyString()
+//
+//            //I don't understand this format yet
+//            var maxQuantityObject = [String:Any]()
+//            for i in 0..<extra.maxQuantity {
+//                maxQuantityObject["\(i)"] = "null"
+//            }
+//
+//            extraParams["maxQuantity"] = maxQuantityObject
+//            extraParams["quantity"] = extra.quatityRequested
+//
+//        }
+//
+//        return extras
+//    }
     
     /**
      

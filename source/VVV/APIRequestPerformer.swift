@@ -67,7 +67,7 @@ extension APIRequestPerformer {
             //Dispatch to main thread for UI updates
             DispatchQueue.main.async {
                 
-                self.log(request: request, data: data,error: error)
+                //self.log(request: request, data: data,error: error)
                 
                 guard let json = Utils.convertDataToJson(data: data) else {
                     
