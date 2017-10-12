@@ -61,13 +61,12 @@ import Foundation
      
      */
     init?(json:[String:Any]) {
-        guard let total = json["totalRateEstimate"] as? Double,
-            let currency = json["currency"] as? String else { return nil }
+        guard let costDict = json["vehicleCost"] as? [String:Any],
+            let currency = json["currencyCode"] as? String,
+            let total = costDict["totalCost"] as? Double else { return nil }
         
         self.total = Decimal(floatLiteral: total)
-        if let perDay = json["perDayPrice"] as? Double {
-            self.perDay = Decimal(floatLiteral: perDay)
-        }
+        self.perDay = Decimal(floatLiteral: json["perDayPrice"] as? Double ?? 0)
         self.currency = currency
         super.init()
     }
@@ -113,7 +112,7 @@ import Foundation
     init?(json:[String:Any]) {
         guard let transmission = json["transmission"] as? [String:Any],
             let code = transmission["code"] as? String,
-            let name = transmission["description"] as? String else { return nil }
+            let name = transmission["name"] as? String else { return nil }
         self.code = code
         self.transmissionName = name
         super.init()
@@ -144,12 +143,11 @@ import Foundation
      
      */
     init?(json:[String:Any]) {
-        guard let aircon = json["hasAirCondition"] as? Bool,
-            let transmission = Transmission(json: json) else { return nil }
+        guard let transmission = Transmission(json: json) else { return nil }
         
-        self.aircon = aircon
+        self.aircon = json.typeValueFor(key: "hasAirConditioning", type: Bool.self)
         self.doors = json.typeValueFor(key: "doorCount", type: Int.self)
-        self.seats = json.typeValueFor(key: "seats",type: Int.self)
+        self.seats = json.typeValueFor(key: "seatCount",type: Int.self)
         self.transmission = transmission
         super.init()
     }

@@ -67,15 +67,7 @@ extension APIRequestPerformer {
             //Dispatch to main thread for UI updates
             DispatchQueue.main.async {
                 
-                self.log(request: request, data: data)
-                
-//                if let error = error {
-//                    apiRequest.responseHandler()(nil, error.localizedDescription)
-//                    return
-//                }
-//                
-//                apiRequest.responseHandler()(data,nil)
-                
+                self.log(request: request, data: data,error: error)
                 
                 guard let json = Utils.convertDataToJson(data: data) else {
                     
@@ -93,7 +85,7 @@ extension APIRequestPerformer {
         task.resume()
     }
     
-    func log(request:URLRequest,data:Data?) {
+    func log(request:URLRequest,data:Data?,error:Error?) {
         
         print("request url \(request.url!)")
         if let body = request.httpBody {
@@ -102,6 +94,10 @@ extension APIRequestPerformer {
         
         if let headers = request.allHTTPHeaderFields {
             print("request headers \(headers)")
+        }
+        
+        if let error = error {
+            print("session Task error \(error.localizedDescription)")
         }
         
         guard let data = data,

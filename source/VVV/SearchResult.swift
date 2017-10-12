@@ -17,8 +17,8 @@ import Foundation
     /** The url of the image of the rental vehicle */
     public let imageUrl : String
     
-    /** A string detailing the mileage. eg. "Unlimited" or "100km" */
-    public let mileage : String
+    /** A object detailing the mileage. */
+    public let mileage : Mileage
     
     /** The pricing of the rental vehicle */
     public let cost : Cost
@@ -55,12 +55,14 @@ import Foundation
      */
     init?(json:[String:Any],supplier:Supplier) {
         
-        guard let name = json["name"] as? String,
+        guard let name = json["vehicleName"] as? String,
             let imageUrl = json["vehicleImage"] as? String,
-            let mileage = json["mileage"] as? String,
-            let category = json["category"] as? String,
+            let mileageDict = json["mileage"] as? [String:Any],
+            let mileage = Mileage(json: mileageDict),
+            let categoryDict = json["vehicleCategory"] as? [String:Any],
+            let category = categoryDict["name"] as? String,
             let code = json["categoryCode"] as? String,
-            let rateId = json["rateID"] as? String,
+            let rateId = json["rateId"] as? String,
             let cost = Cost(json:json),
             let features = Features(json: json) else {
                 print("failed to map result \(json.debugDescription)")
