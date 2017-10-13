@@ -164,8 +164,8 @@ import Foundation
     
     /** Inits the DateRange with the booking json object */
     init?(json:[String:Any]) {
-        guard let pickupObject = json["pickUp"] as? [String:Any],
-            let returnObject = json["return"] as? [String :Any],
+        guard let pickupObject = json["pickUpDetails"] as? [String:Any],
+            let returnObject = json["returnDetails"] as? [String :Any],
             let start = Date.dateFrom(jsonData: pickupObject),
             let end = Date.dateFrom(jsonData: returnObject) else { return nil }
         

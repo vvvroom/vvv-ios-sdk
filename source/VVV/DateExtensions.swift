@@ -153,8 +153,14 @@ extension Date {
         dateFormatter.dateFormat = "YYYY-MM-dd"
         let timeFormatter = DateFormatter()
         timeFormatter.dateFormat = "HH:mm:ss"
+        var time : Date?
+        time = timeFormatter.date(from: timeString)
+        if time == nil {
+            timeFormatter.dateFormat = "HH:mm"
+            time = timeFormatter.date(from: timeString)
+        }
         
-        guard let timeDate = timeFormatter.date(from: timeString),
+        guard let timeDate = time,
             let date = dateFormatter.date(from: dateString) else {
                 return nil
         }

@@ -70,26 +70,6 @@ import Foundation
         self.currency = currency
         super.init()
     }
-    
-    /**
-     
-     Init with the booking response
-     - Parameters:
-        - json:  booking json object
-     
-     */
-    init?(bookingJson:[String:Any]) {
-        guard let totalString = bookingJson["totalRateEstimate"] as? String,
-            let total = Decimal(string: totalString),
-            let currency = bookingJson["currency"] as? String else { return nil }
-        
-        self.total = total
-        if let perDay = bookingJson["perDayPrice"] as? Double {
-            self.perDay = Decimal(floatLiteral: perDay)
-        }
-        self.currency = currency
-        super.init()
-    }
 }
 
 /** An object containing the transmission information Feature */
@@ -148,25 +128,6 @@ import Foundation
         self.aircon = json.typeValueFor(key: "hasAirConditioning", type: Bool.self)
         self.doors = json.typeValueFor(key: "doorCount", type: Int.self)
         self.seats = json.typeValueFor(key: "seatCount",type: Int.self)
-        self.transmission = transmission
-        super.init()
-    }
-    
-    /**
-     
-     Init with the booking response
-     - Parameters:
-        - json:  booking json object
-     
-     */
-    init?(bookingJson:[String:Any]) {
-        guard let dataObject = bookingJson["expandedCode"] as? [String:Any],
-            let aircon = dataObject["airCondition"] as? Bool,
-            let transmission = Transmission(json: bookingJson) else { return nil }
-        
-        self.aircon = aircon
-        self.doors = bookingJson.typeValueFor(key: "doorCount", type: Int.self)
-        self.seats = bookingJson.typeValueFor(key: "seats",type: Int.self)
         self.transmission = transmission
         super.init()
     }

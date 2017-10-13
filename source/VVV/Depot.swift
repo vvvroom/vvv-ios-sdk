@@ -87,15 +87,15 @@ import CoreLocation
             let city = bookingJson["city"] as? String,
             let countryCode = bookingJson["countryCode"] as? String,
             let isAirport = bookingJson["isAirport"] as? Bool,
-            let phone = bookingJson["phoneNumber"] as? String,
-            let lat = bookingJson["latitude"] as? Double,
-            let long = bookingJson["longitude"] as? Double else { return nil }
+            let locationDict = bookingJson["geoLocation"] as? [String:Any],
+            let lat = locationDict["latitude"] as? Double,
+            let long = locationDict["longitude"] as? Double else { return nil }
         
         self.location = Location(title: name, subTitle: "\(address), \(city)", country: countryCode, location: CLLocation(latitude: lat, longitude: long))
         self.location.isAirport = isAirport
         self.code = code
         self.name = name
-        self.phone = phone
+        self.phone = bookingJson["phoneNumber"] as? String ?? ""
         self.supplier = supplier
         super.init()
     }

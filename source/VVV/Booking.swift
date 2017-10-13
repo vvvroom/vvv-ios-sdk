@@ -25,8 +25,8 @@ import Foundation
     /** The url of the image of the rental vehicle */
     public let imageUrl : String
     
-    /** A string detailing the mileage. eg. "Unlimited" or "100km" */
-    public let mileage : String
+    /** A objec detailing the mileage. */
+    public let mileage : Mileage
     
     /** The personal driver details of the driver for the booking */
     public let driver : BookedDriver
@@ -108,18 +108,21 @@ import Foundation
      
      */
     init?(json:[String:Any]) {
-        guard let identifier = json["bookingID"] as? Int,
+        guard let identifier = json["bookingId"] as? Int,
             let confirmation = json["confirmation"] as? String,
-            let supplierCode = json["supplierCode"] as? String,
-            let vehicleName = json["name"] as? String,
+            let supplierDict = json["supplier"] as? [String:Any],
+            let supplierCode = supplierDict["code"] as? String,
+            let vehicleName = json["vehicleName"] as? String,
             let imageUrl = json["vehicleImage"] as? String,
-            let mileage = json["mileage"] as? String,
-            let driverJson = json["driver"] as? [String:Any],
-            let statusJson = json["bookingStatus"] as? [String:Any],
+            let mileageDict = json["mileage"] as? [String:Any],
+            let mileage = Mileage(json: mileageDict),
+            let driverJson = json["customerDetails"] as? [String:Any],
+            let statusJson = json["status"] as? [String:Any],
             let status = BookingStatus(json: statusJson),
             let driver = BookedDriver(json:driverJson),
-            let cost = Cost(bookingJson:json),
-            let features = Features(bookingJson:json),
+            let cost = Cost(json:json),
+            let costDict = json["vehicleCost"] as? [String:Any],
+            let features = Features(json:json),
             let dates = DateRange(json: json),
             let depots = DepotPair(bookingJson: json, supplierCode: supplierCode) else {
             return nil
@@ -145,7 +148,7 @@ import Foundation
         self.flightNumber = json["flightNumber"] as? String
         
         var feeArray = [Fee]()
-        if let feesJson = json["fees"] as? [[String:Any]] {
+        if let feesJson = costDict["fees"] as? [[String:Any]] {
             for object in feesJson {
                 guard let fee = Fee(json: object) else { continue }
                 feeArray.append(fee)
@@ -207,13 +210,14 @@ import Foundation
      
      */
     init?(json:[String:Any]) {
-        guard let countryCode = json["countryCode"] as? String,
-            let ageInt = json["driverAge"] as? Int,
+        guard let countryCode = json["country"] as? String,
+            let ageString = json["age"] as? String,
+            let ageInt = Int(ageString),
             let age = AgeGroup(rawValue: ageInt),
             let title = json["title"] as? String,
             let first = json["firstName"] as? String,
             let last = json["lastName"] as? String,
-            let phone = json["phone"] as? String,
+            let phone = json["phoneNumber"] as? String,
             let email = json["email"] as? String else { return nil }
         
         self.residency = Country(code: countryCode)

@@ -84,8 +84,10 @@ import Foundation
      */
     init?(bookingJson:[String:Any],supplierCode:String) {
         guard let supplier = SupplierManager.shared.supplierFor(code: supplierCode),
-            let pickupDepotJson = bookingJson["pickupDepot"] as? [String:Any],
-            let returnDepotJson = bookingJson["returnDepot"] as? [String:Any],
+            let pickupDetails = bookingJson["pickUpDetails"] as? [String:Any],
+            let returnDetails = bookingJson["returnDetails"] as? [String:Any],
+            let pickupDepotJson = pickupDetails["depot"] as? [String:Any],
+            let returnDepotJson = returnDetails["depot"] as? [String:Any],
             let pickupDepot = Depot(bookingJson: pickupDepotJson, supplier: supplier),
             let returnDepot = Depot(bookingJson: returnDepotJson, supplier: supplier) else { return nil }
         
