@@ -61,68 +61,67 @@ class CreateBookingRequest: APIRequest {
         
         var paramsDict = [String:Any]()
         
-        paramsDict["requestURL"] = "iphone"
-        
-        //Standard booking info
-        paramsDict["alias"] = Config.shared.alias ?? ""
-
         paramsDict["supplierCode"] = pending.depots.supplier.code
-        paramsDict["pickUpDate"] = pending.dateRange.start.apiFormattedDateString()
-        paramsDict["pickUpTime"] = pending.dateRange.start.apiFormattedTimeString()
-        paramsDict["returnDate"] = pending.dateRange.end.apiFormattedDateString()
-        paramsDict["returnTime"] = pending.dateRange.end.apiFormattedTimeString()
-        paramsDict["countryOfResidence"] = pending.residency.code
-        paramsDict["driverAge"] = pending.age.rawValue
-        
-        paramsDict["pickUpDepotCode"] = pending.depots.pickupDepot.code
-        paramsDict["returnDepotCode"] = pending.depots.returnDepot.code
-        
-        paramsDict["carCategoryCode"] = pending.code
-        
-        paramsDict["agree"] = true
-        paramsDict["newsletter"] = false
-        
-        paramsDict["sendSms"] = true
-        paramsDict["sendEmail"] = true
-        
-        paramsDict["sippID"] = pending.sippID
+        paramsDict["currencyCode"] = pending.cost.currency
+        paramsDict["countryCode"] = pending.depots.pickupDepot.location.country
         
         //Driver details
-        paramsDict["title"] = pending.driver.title
-        paramsDict["firstName"] = pending.driver.firstName
-        paramsDict["lastName"] = pending.driver.lastName
-        paramsDict["phoneNumber"] = self.createPhoneNumber()
-        paramsDict["email"] = pending.driver.email
+        var customer = [String:Any]()
+        customer["title"] = pending.driver.title
+        customer["firstName"] = pending.driver.firstName
+        customer["lastName"] = pending.driver.lastName
+        customer["phoneNumber"] = self.createPhoneNumber()
+        customer["email"] = pending.driver.email
+        customer["driverAge"] = "\(pending.age.rawValue)"
+        customer["countryOfResidence"] = pending.residency.code
+        paramsDict["customerDetails"] = customer
+     
+        var rentalDetails = [String:Any]()
+        var pickupDetails = [String:Any]()
+        pickupDetails["date"] = pending.dateRange.start.apiFormattedDateString()
+        pickupDetails["time"] = pending.dateRange.start.apiFormattedTimeString()
+        pickupDetails["depotCode"] = pending.depots.pickupDepot.code
         
-        //Cost
-        paramsDict["totalCost"] = pending.cost.total.currencyNumberOnlyString()
-        paramsDict["currencyCode"] = pending.cost.currency
+        rentalDetails["pickUp"] = pickupDetails
         
-        paramsDict["rateID"] = pending.rateId
+        var returnDetails = [String:Any]()
+        returnDetails["date"] = pending.dateRange.end.apiFormattedDateString()
+        returnDetails["time"] = pending.dateRange.end.apiFormattedTimeString()
+        returnDetails["depotCode"] = pending.depots.pickupDepot.code
         
-        ///Extra Vehicle details
-        paramsDict["vehicleImage"] = pending.imageUrl
-        paramsDict["mileage"] = pending.mileage
+        rentalDetails["return"] = returnDetails
         
-        //TODO add loyaltyNumber
-        if let flightNumber = pending.flightNumber {
-            paramsDict["flightNumber"] = flightNumber
+        if let flight = pending.flightNumber {
+            rentalDetails["flightNumber"] = flight
         }
+        paramsDict["rentalDetails"] = rentalDetails
         
-        //Sub Objects
-        paramsDict["vehicleDetails"] = createVehicleDetails()
-//        if let extraParams = createExtraParams() {
-//            paramsDict["equipmentList"] = extraParams
-//        } else {
-            paramsDict["equipmentList"] = "null"
-        //}
+        var vehicleDetails = [String:Any]()
+        vehicleDetails["categoryCode"] = pending.code
+        vehicleDetails["rateId"] = pending.rateId
+        paramsDict["vehicleDetails"] = vehicleDetails
         
-        if let fees = createFeesParams() {
-            paramsDict["fees"] = fees
-        } else {
-            paramsDict["fees"] = "null"
+        var notify = [String:Any]()
+        notify["sms"] = true
+        notify["email"] = true
+        paramsDict["notify"] = notify
+        
+        var extraParams : [[String:Int]] = []
+        
+        for extra in pending.extras {
+            if extra.quatityRequested == 0 {
+                continue
+            }
+            extraParams.append(["id":extra.identifier,"quantity":extra.quatityRequested])
         }
+        paramsDict["extras"] = extraParams
         
+        //TODO support token
+//        if let token = self.paymentToken {
+//            paramsDict["payment"] = ["token":token]
+//        }
+        
+        paramsDict["isTestBooking"] = true
         return paramsDict
     }
 
@@ -147,95 +146,6 @@ class CreateBookingRequest: APIRequest {
         }
         
         return "\(prefix)\(phone)"
-    }
-    
-    /**
-     
-     Creates the vehicle details param object.
-     
-     - Return:
-        - [String:Any]: Params dictionary to be added to the params main dictionary under "vehicleDetails" key.
-     
-     */
-    func createVehicleDetails() -> [String:Any] {
-        
-        var vehicleDetails = [String:Any]()
-        vehicleDetails["vehicleClassID"] = pending.classID
-        vehicleDetails["vehicleCategoryID"] = pending.categoryID
-        vehicleDetails["transmissionType"] = pending.features.transmission.code
-        vehicleDetails["airConditioned"] = pending.features.aircon
-        
-        return vehicleDetails
-    }
-    
-    /**
-     
-     Creates the extras param object, to request any params with an amount with the booking
-     
-     - Return:
-        - [String:Any]: Params dictionary to be added to the params main dictionary under "extras" key. Can be nil.
-     
-     */
-//    func createExtraParams() -> [String:Any]? {
-//
-//        var extras = [String:Any]()
-//
-//        for extra in pending.extras {
-//
-//            var extraParams = [String:Any]()
-//            extraParams["extrasID"] = extra.identifier
-//            if let max = extra.maxPrice {
-//                extraParams["maxPrice"] = max.currencyNumberOnlyString()
-//            }
-//            extraParams["name"] = extra.extraName
-//            extraParams["price"] = extra.price.currencyNumberOnlyString()
-//
-//            //I don't understand this format yet
-//            var maxQuantityObject = [String:Any]()
-//            for i in 0..<extra.maxQuantity {
-//                maxQuantityObject["\(i)"] = "null"
-//            }
-//
-//            extraParams["maxQuantity"] = maxQuantityObject
-//            extraParams["quantity"] = extra.quatityRequested
-//
-//        }
-//
-//        return extras
-//    }
-    
-    /**
-     
-     Creates the fees param object.  This is actually double encoded so a encoded string is provided
-     
-     - Return:
-        - String: Params dictionary to be added to the params main dictionary under "fees" key. Can be nil.
-     
-     */
-    func createFeesParams() -> String? {
-        
-        var fees = [Any]()
-        
-        for fee in pending.fees {
-            
-            var feeDict = [String:Any]()
-            feeDict["amount"] = fee.amount.currencyNumberOnlyString()
-            feeDict["description"] = fee.details
-            feeDict["xrsBaseAmount"] = fee.amount.currencyNumberOnlyString()
-            
-            fees.append(feeDict)
-        }
-        
-        if fees.count == 0 {
-            return nil
-        }
-        
-        do {
-            let data = try JSONSerialization.data(withJSONObject: fees, options: .prettyPrinted)
-            return String(data: data, encoding: .utf8)
-        } catch {
-            return nil
-        }
     }
     
     func map(json:Any) -> Booking? {

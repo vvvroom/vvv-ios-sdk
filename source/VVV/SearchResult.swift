@@ -32,7 +32,7 @@ import Foundation
     /** The category of the rental vehicle eg. "Compact" */
     public let category : String
     
-    /** The code identifier of the rental vehicle eg. "Compact" */
+    /** The code identifier of the rental vehicle eg. "ECAR" */
     public let code : String
     
     /** The rateId of this search result. */
