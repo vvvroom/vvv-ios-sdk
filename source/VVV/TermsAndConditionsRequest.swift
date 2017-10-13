@@ -62,24 +62,24 @@ class TermsAndConditionsRequest: APIRequest {
         var paramsDict = [String:Any]()
         
         if let booking = self.booking {
-            paramsDict["bookingID"] = booking.identifier
+            paramsDict["bookingId"] = booking.identifier
             return paramsDict
         }
         
         guard let pending = self.pending else { return [:] }
         
-        paramsDict["supplier"] = pending.supplier.code
+        paramsDict["supplierCode"] = pending.supplier.code
         
         paramsDict["pickUpDate"] = pending.dateRange.start.apiFormattedDateString()
         paramsDict["pickUpTime"] = pending.dateRange.start.apiFormattedTimeString()
         paramsDict["returnDate"] = pending.dateRange.end.apiFormattedDateString()
         paramsDict["returnTime"] = pending.dateRange.end.apiFormattedTimeString()
-        paramsDict["countryOfResidence"] = pending.residency.code
+        paramsDict["driverCountryCode"] = pending.residency.code
         paramsDict["driverAge"] = pending.age.rawValue
-        paramsDict["pickUpLocationCode"] = pending.depots.pickupDepot.code
-        paramsDict["returnLocationCode"] = pending.depots.returnDepot.code
+        paramsDict["pickUpDepotCode"] = pending.depots.pickupDepot.code
+        paramsDict["returnDepotCode"] = pending.depots.returnDepot.code
         paramsDict["carCategoryCode"] = pending.code
-        paramsDict["rateID"] = pending.rateId
+        paramsDict["rateId"] = pending.rateId
         
         return paramsDict
     }
