@@ -19,7 +19,7 @@ enum NetworkEndpoint : String {
     case SearchVehicle = "v2.0/search/vehicle"
     case CreateBooking = "v2.0/booking/create"
     case CancelBooking = "v2.0/booking/cancel"
-    case GetBooking = "v2.0/booking"
+    case GetBooking = "v2.0/booking/retrieve"
     case SupplierTerms = "v2.0/supplier/terms"
     case SupplierList = "v2.0/supplier/list"
     case BookingTerms = "v2.0/booking/terms"

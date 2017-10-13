@@ -211,9 +211,6 @@ import Foundation
      */
     init?(json:[String:Any]) {
         guard let countryCode = json["country"] as? String,
-            let ageString = json["age"] as? String,
-            let ageInt = Int(ageString),
-            let age = AgeGroup(rawValue: ageInt),
             let title = json["title"] as? String,
             let first = json["firstName"] as? String,
             let last = json["lastName"] as? String,
@@ -221,6 +218,14 @@ import Foundation
             let email = json["email"] as? String else { return nil }
         
         self.residency = Country(code: countryCode)
+        var ageInt = json["age"] as? Int
+        if ageInt == nil {
+            let ageString = json["age"] as? String
+            ageInt = Int(ageString ?? "")
+        }
+        guard let ageRaw = ageInt,
+            let age = AgeGroup(rawValue: ageRaw) else { return nil }
+        
         self.age = age
         self.title = title
         self.firstName = first
