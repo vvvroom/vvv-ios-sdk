@@ -138,6 +138,7 @@ import Foundation
             let categoryDict = json["vehicleCategory"] as? [String:Any],
             let categoryID = categoryDict["id"] as? Int,
             let classDict = json["vehicleClass"] as? [String:Any],
+            let costDict = json["vehicleCost"] as? [String:Any],
             let classID = classDict["id"] as? Int else {
                 print("failed to map pending \(json.debugDescription)")
                 return nil
@@ -153,7 +154,8 @@ import Foundation
         self.residency = search.residency
         
         var feeArray = [Fee]()
-        if let feesJson = json["fees"] as? [[String:Any]] {
+        
+        if let feesJson = costDict["fees"] as? [[String:Any]] {
             for object in feesJson {
                 guard let fee = Fee(json: object) else { continue }
                 feeArray.append(fee)
