@@ -41,13 +41,13 @@ class CancelRequest: APIRequest {
     }
     
     override func encoding() -> APIParameter {
-        return .url
+        return .json
     }
     
     override func params() -> [String : Any] {
         var paramsDict = [String:Any]()
         
-        paramsDict["bookingID"] = booking.identifier
+        paramsDict["bookingId"] = "\(booking.identifier)"
         paramsDict["supplierConfirmation"] = booking.supplierConfirmation
         
         return paramsDict
