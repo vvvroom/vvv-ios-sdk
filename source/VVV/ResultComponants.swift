@@ -99,6 +99,30 @@ import Foundation
     }
 }
 
+/** An object containing the luggage capacity */
+@objc(VVVLuggage) public class Luggage : NSObject  {
+    
+    /** The amound of small bags */
+    public let small : Int
+    
+    /** The amound of large bags */
+    public let large : Int
+    
+    
+    /**
+     
+     Init with the json response
+     - Parameters:
+     - json: json object
+     
+     */
+    init(json:[String:Any]) {
+        self.small = json["small"] as? Int ?? 0
+        self.large = json["large"] as? Int ?? 0
+        super.init()
+    }
+}
+
 /** An object containing the features of a search result */
 @objc(VVVFeatures) public class Features : NSObject {
     
@@ -114,6 +138,9 @@ import Foundation
     /** The number of seats in the vehicle */
     public let seats : Int
     
+    /** The luggage capacity of the vehicle */
+    public let luggage : Luggage
+    
     
     /**
      
@@ -128,6 +155,7 @@ import Foundation
         self.aircon = json.typeValueFor(key: "hasAirConditioning", type: Bool.self)
         self.doors = json.typeValueFor(key: "doorCount", type: Int.self)
         self.seats = json.typeValueFor(key: "seatCount",type: Int.self)
+        self.luggage = Luggage(json: json["luggage"] as? [String:Any] ?? [:])
         self.transmission = transmission
         super.init()
     }
