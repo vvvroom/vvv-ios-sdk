@@ -42,8 +42,8 @@ class Utils {
     
     /**
      
-     Validates that a flight number has at 2 letters characters followed by at least 3 number characters and doesn't exceed 7 characters.
-     Example valid flight number is "QA123"
+     Validates a flight number.
+     Example valid flight numbers are "QA123","QA40"
      
      - Parameters:
         - flightNumber:  The flight number to be checked
@@ -53,33 +53,17 @@ class Utils {
      */
     static func validate(flightNumber:String) -> Bool {
         
-        //First we check overall length of flight number
-        if flightNumber.characters.count < 5 || flightNumber.characters.count > 7 {
+        let text = flightNumber.uppercased()
+        let pattern = "^[A-Z\\d]{2}[A-Z]?\\d{1,4}[A-Z]?$"
+        do {
+            let regex = try NSRegularExpression(pattern: pattern)
+            let results = regex.matches(in: text,
+                                        range: NSRange(text.startIndex..., in: text))
+            return results.count > 0
+        } catch let error {
+            print("invalid regex: \(error.localizedDescription)")
             return false
         }
-        
-        //Now we get the first 2 letters and the letters characterset
-        let lettersIndex = flightNumber.index(flightNumber.startIndex, offsetBy: 2)
-        //let firstTwo = flightNumber.substring(to: lettersIndex)
-        let firstTwo = String(flightNumber[...lettersIndex])
-        
-        //Now we check that the first 2 characters are letters.
-        if !firstTwo.containsOnlyLetters() {
-            return false
-        }
-        
-        //Now we check that the 3 characters after the first 2 to make sure they are numbers
-        let start = flightNumber.index(flightNumber.startIndex, offsetBy: 2)
-        let end = flightNumber.index(start, offsetBy: 3)
-        let range = Range(uncheckedBounds: (lower: start, upper: end))
-        let numbersString = String(flightNumber[range])
-        
-        //Now we check that the these characters are numbers.
-        if !numbersString.containsOnlyNumbers() {
-            return false
-        }
-        
-        return true
     }
 }
 
